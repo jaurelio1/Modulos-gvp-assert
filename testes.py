@@ -4,7 +4,6 @@ import threading
 import time
 
 ThresholdBinarizacao = 20
-area = 0
 w = 0
 h = 0
 borda = 200
@@ -17,7 +16,7 @@ cont_saidas = 0
 def TestaInterseccaoEntrada(x, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida):
     DiferencaAbsoluta = abs(x - CoordenadaXLinhaSaida)
 
-    if ((DiferencaAbsoluta >= 2) and (x < CoordenadaXLinhaEntrada)):
+    if ((DiferencaAbsoluta >= 2) and (x < CoordenadaXLinhaEntrada) and (x > CoordenadaXLinhaSaida)):
         return 1
     else:
         return 0
@@ -93,21 +92,22 @@ while True:
             quantBigCar += 1
             cv2.drawContours(Frame, [box], 0, (255, 0, 0), 2)
 
-        (y, x, h, w) = cv2.boundingRect(c)
+        (x, y, w, h) = cv2.boundingRect(c)
 
         CoordenadaXCentroContorno = (2*x + w) // 2
         CoordenadaYCentroContorno = (2*y + h) // 2
         PontoCentralContorno = (CoordenadaYCentroContorno, CoordenadaXCentroContorno)
-        cv2.circle(Frame, PontoCentralContorno, 1, (0, 0, 0), 5)
+        #cv2.circle(Frame, PontoCentralContorno, 1, (0, 0, 0), 5)
 
-        print(TestaInterseccaoEntrada(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida)
-              , TestaInterseccaoSaida(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida))
+        '''print(TestaInterseccaoEntrada(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida)
+              , TestaInterseccaoSaida(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida))'''
         if(TestaInterseccaoEntrada(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida)):
             cont_entradas += 1
 
         if(TestaInterseccaoSaida(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida)):
             cont_saidas += 1
 
+    print(cont_entradas, cont_saidas)
 
     '''if (cont_entradas == TestaInterseccaoSaida(CoordenadaXCentroContorno, CoordenadaXLinhaEntrada, CoordenadaXLinhaSaida)
             and quantContornos > 0):
